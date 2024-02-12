@@ -15,16 +15,26 @@ project(
     DESCRIPTION "Space for learning cu code"
     LANGUAGES CXX CUDA)
 
-# Adds application cu source files
+# Adds application main file alone because CUDA
+# Done because CUDA-specific symbols cannot be merged in same way as C++ functions
 set(
-    APP_SOURCES
+    APP_SOURCE
     source/main.cu)
 
 # Builds the CUDAtutorial library
-add_library(CUDAtutorial_lib ${APP_SOURCES})
+add_library(CUDAtutorial_lib)
 target_include_directories(CUDAtutorial_lib PUBLIC include)
 
+# Add remaing CUDA tutorial source files to the library
+target_sources(CUDAtutorial_lib PRIVATE
+    source/kernal.cu
+    source/threads.cu)
+
+# Sets the CUDA property for separable compilation
+set_target_properties(CUDAtutorial_lib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+
 # Builds the CUDAtutorial exectuable
-add_executable(CUDAtutorial ${APP_SOURCES})
-target_include_directories(CUDAtutorial PRIVATE include)
+add_executable(CUDAtutorial)
+target_sources(CUDAtutorial PRIVATE ${APP_SOURCE})
+target_include_directories(CUDAtutorial PUBLIC include)
 target_link_libraries(CUDAtutorial PRIVATE CUDAtutorial_lib)
