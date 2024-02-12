@@ -1,0 +1,5 @@
+**/.vscode/
+**/build/
+*.d
+*.o
+*.gpg
